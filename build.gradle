@@ -37,13 +37,6 @@ allprojects {
       javaParameters = true // Useful for reflection.
     }
   }
-
-  test {
-    // enable TestNG support (default is JUnit)
-    useTestNG() {
-      useDefaultListeners = true
-    }
-  }
 }
 
 wrapper {

@@ -3,6 +3,7 @@ package com.github.opticyclic.corda.demo.flows.classic
 import com.github.opticyclic.corda.demo.classic.states.IOUState
 import net.corda.core.contracts.TransactionVerificationException
 import net.corda.core.node.services.queryBy
+import net.corda.core.node.services.vault.QueryCriteria
 import net.corda.core.utilities.getOrThrow
 import net.corda.testing.core.singleIdentity
 import net.corda.testing.node.MockNetwork
@@ -104,16 +105,18 @@ class IOUFlowTests {
 
     @Test
     fun `flow records the correct IOU in both parties' vaults`() {
-        val iouValue = 1
-        val flow = IOUFlow(1, miniCorp.info.singleIdentity())
+        val iouValue = 5
+        val flow = IOUFlow(iouValue, miniCorp.info.singleIdentity())
         val future = megaCorp.startFlow(flow)
         network.runNetwork()
-        future.getOrThrow()
+        val signedTx = future.getOrThrow()
 
+        val output = signedTx.tx.outputs.single().data as IOUState
         // We check the recorded IOU in both vaults.
         for (node in listOf(megaCorp, miniCorp)) {
             node.transaction {
-                val ious = node.services.vaultService.queryBy<IOUState>().states
+                val linearStateCriteria = QueryCriteria.LinearStateQueryCriteria(linearId = listOf(output.linearId))
+                val ious = node.services.vaultService.queryBy<IOUState>(linearStateCriteria).states
                 assertEquals(1, ious.size)
                 val recordedState = ious.single().state.data
                 assertEquals(recordedState.value, iouValue)

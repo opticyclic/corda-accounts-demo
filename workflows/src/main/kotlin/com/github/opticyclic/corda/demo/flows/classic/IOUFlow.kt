@@ -71,11 +71,11 @@ class IOUFlow(val iouValue: Int, val counterparty: Party) : FlowLogic<SignedTran
         //Send the state to the counterparty and get it back with their signature.
         progressTracker.currentStep = COLLECTING
         val counterpartySession = initiateFlow(counterparty)
-        val fullySignedTx = subFlow(CollectSignaturesFlow(partSignedTx, listOf(counterpartySession), Companion.COLLECTING.childProgressTracker()))
+        val fullySignedTx = subFlow(CollectSignaturesFlow(partSignedTx, listOf(counterpartySession), COLLECTING.childProgressTracker()))
 
         //Notarise and record the transaction in both parties' vaults.
         progressTracker.currentStep = FINALISING
-        return subFlow(FinalityFlow(fullySignedTx, listOf(counterpartySession), Companion.FINALISING.childProgressTracker()))
+        return subFlow(FinalityFlow(fullySignedTx, listOf(counterpartySession), FINALISING.childProgressTracker()))
     }
 }
 

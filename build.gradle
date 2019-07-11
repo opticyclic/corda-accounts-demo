@@ -2,6 +2,7 @@ buildscript {
   ext {
     corda_release_version = '4.1'
     corda_gradle_plugins_version = '4.0.42'
+    accounts_release_version = '1.0-RC01'
     quasar_version = '0.7.10'
     kotlin_version = '1.2.71'
     testng_version = '6.14.3'
@@ -27,6 +28,9 @@ allprojects {
     maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda' }
     //Crash Shell dependencies are not published correctly in R3 repo
     maven { url 'https://jitpack.io' }
+    //This is needed until the accounts sdk is official
+    maven { url "http://ci-artifactory.corda.r3cev.com/artifactory/corda-lib-dev" }
+    maven { url 'http://ci-artifactory.corda.r3cev.com/artifactory/corda-lib' }
   }
 
   tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
@@ -53,6 +57,8 @@ dependencies {
   // CorDapp dependencies.
   cordapp project(":contracts")
   cordapp project(":workflows")
+  cordapp "com.r3.corda.lib.accounts:accounts-contracts:$accounts_release_version"
+  cordapp "com.r3.corda.lib.accounts:accounts-flows:$accounts_release_version"
 }
 
 task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
@@ -62,6 +68,8 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
     }
     cordapp project(':contracts')
     cordapp project(':workflows')
+    cordapp("com.r3.corda.lib.accounts:accounts-contracts:$accounts_release_version")
+    cordapp("com.r3.corda.lib.accounts:accounts-flows:$accounts_release_version")
     rpcUsers = [[user: "user1", "password": "test", "permissions": ["ALL"]]]
   }
   node {
@@ -75,7 +83,7 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
     cordapps.clear()
   }
   node {
-    name "O=Bank1,L=London,C=GB"
+    name "O=Banks,L=London,C=GB"
     p2pPort 10004
     rpcSettings {
       address("localhost:10005")
@@ -83,27 +91,11 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
     }
   }
   node {
-    name "O=Bank2,L=London,C=GB"
+    name "O=Agents,L=London,C=GB"
     p2pPort 10007
     rpcSettings {
       address("localhost:10008")
       adminAddress("localhost:10009")
-    }
-  }
-  node {
-    name "O=Agent1,L=London,C=GB"
-    p2pPort 10010
-    rpcSettings {
-      address("localhost:10011")
-      adminAddress("localhost:10012")
-    }
-  }
-  node {
-    name "O=Agent2,L=London,C=GB"
-    p2pPort 10013
-    rpcSettings {
-      address("localhost:10014")
-      adminAddress("localhost:10015")
     }
   }
 }

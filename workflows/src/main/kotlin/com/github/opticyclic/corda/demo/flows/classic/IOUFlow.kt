@@ -1,8 +1,8 @@
-package com.github.opticyclic.corda.demo.flows
+package com.github.opticyclic.corda.demo.flows.classic
 
 import co.paralleluniverse.fibers.Suspendable
-import com.github.opticyclic.corda.demo.contracts.IOUContract
-import com.github.opticyclic.corda.demo.states.IOUState
+import com.github.opticyclic.corda.demo.classic.contracts.IOUContract
+import com.github.opticyclic.corda.demo.classic.states.IOUState
 import net.corda.core.contracts.Command
 import net.corda.core.contracts.requireThat
 import net.corda.core.flows.*
@@ -71,11 +71,11 @@ class IOUFlow(val iouValue: Int, val counterparty: Party) : FlowLogic<SignedTran
         //Send the state to the counterparty and get it back with their signature.
         progressTracker.currentStep = COLLECTING
         val counterpartySession = initiateFlow(counterparty)
-        val fullySignedTx = subFlow(CollectSignaturesFlow(partSignedTx, listOf(counterpartySession), COLLECTING.childProgressTracker()))
+        val fullySignedTx = subFlow(CollectSignaturesFlow(partSignedTx, listOf(counterpartySession), Companion.COLLECTING.childProgressTracker()))
 
         //Notarise and record the transaction in both parties' vaults.
         progressTracker.currentStep = FINALISING
-        return subFlow(FinalityFlow(fullySignedTx, listOf(counterpartySession), FINALISING.childProgressTracker()))
+        return subFlow(FinalityFlow(fullySignedTx, listOf(counterpartySession), Companion.FINALISING.childProgressTracker()))
     }
 }
 

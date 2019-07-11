@@ -1,6 +1,6 @@
-package com.github.opticyclic.corda.demo.flows
+package com.github.opticyclic.corda.demo.flows.classic
 
-import com.github.opticyclic.corda.demo.states.IOUState
+import com.github.opticyclic.corda.demo.classic.states.IOUState
 import net.corda.core.contracts.TransactionVerificationException
 import net.corda.core.node.services.queryBy
 import net.corda.core.utilities.getOrThrow
@@ -23,8 +23,8 @@ class IOUFlowTests {
     @BeforeClass
     fun setup() {
         network = MockNetwork(MockNetworkParameters(cordappsForAllNodes = listOf(
-                TestCordapp.findCordapp("com.github.opticyclic.corda.demo.contracts"),
-                TestCordapp.findCordapp("com.github.opticyclic.corda.demo.flows")
+                TestCordapp.findCordapp("com.github.opticyclic.corda.demo.classic.contracts"),
+                TestCordapp.findCordapp("com.github.opticyclic.corda.demo.flows.classic")
         )))
         megaCorp = network.createPartyNode()
         miniCorp = network.createPartyNode()

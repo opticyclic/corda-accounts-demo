@@ -1,6 +1,6 @@
-package com.github.opticyclic.corda.demo.contracts
+package com.github.opticyclic.corda.demo.classic.contracts
 
-import com.github.opticyclic.corda.demo.states.IOUState
+import com.github.opticyclic.corda.demo.classic.states.IOUState
 import net.corda.core.identity.CordaX500Name
 import net.corda.testing.core.DummyCommandData
 import net.corda.testing.core.TestIdentity
@@ -9,7 +9,7 @@ import net.corda.testing.node.ledger
 import org.testng.annotations.Test
 
 class IOUContractTests {
-    private val ledgerServices = MockServices(listOf("com.github.opticyclic.corda.demo.contracts"))
+    private val ledgerServices = MockServices(listOf("com.github.opticyclic.corda.demo.classic.contracts"))
     private val megaCorp = TestIdentity(CordaX500Name("MegaCorp", "London", "GB"))
     private val miniCorp = TestIdentity(CordaX500Name("MiniCorp", "New York", "US"))
     private val iouValue = 1

@@ -1,6 +1,6 @@
-package com.github.opticyclic.corda.demo.contracts
+package com.github.opticyclic.corda.demo.classic.contracts
 
-import com.github.opticyclic.corda.demo.states.IOUState
+import com.github.opticyclic.corda.demo.classic.states.IOUState
 import net.corda.core.contracts.*
 import net.corda.core.transactions.LedgerTransaction
 import java.security.PublicKey

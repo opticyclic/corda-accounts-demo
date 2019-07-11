@@ -1,6 +1,6 @@
-package com.github.opticyclic.corda.demo.states
+package com.github.opticyclic.corda.demo.classic.states
 
-import com.github.opticyclic.corda.demo.contracts.IOUContract
+import com.github.opticyclic.corda.demo.classic.contracts.IOUContract
 import net.corda.core.contracts.BelongsToContract
 import net.corda.core.contracts.LinearState
 import net.corda.core.contracts.UniqueIdentifier

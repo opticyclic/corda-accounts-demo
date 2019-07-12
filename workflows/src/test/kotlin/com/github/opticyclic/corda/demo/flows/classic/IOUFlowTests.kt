@@ -5,6 +5,7 @@ import net.corda.core.contracts.TransactionVerificationException
 import net.corda.core.node.services.queryBy
 import net.corda.core.node.services.vault.QueryCriteria
 import net.corda.core.utilities.getOrThrow
+import net.corda.testing.common.internal.testNetworkParameters
 import net.corda.testing.core.singleIdentity
 import net.corda.testing.node.MockNetwork
 import net.corda.testing.node.MockNetworkParameters
@@ -23,10 +24,12 @@ class IOUFlowTests {
 
     @BeforeClass
     fun setup() {
-        network = MockNetwork(MockNetworkParameters(cordappsForAllNodes = listOf(
-                TestCordapp.findCordapp("com.github.opticyclic.corda.demo.classic.contracts"),
-                TestCordapp.findCordapp("com.github.opticyclic.corda.demo.flows.classic")
-        )))
+        network = MockNetwork(MockNetworkParameters(
+                networkParameters = testNetworkParameters(minimumPlatformVersion = 4),
+                cordappsForAllNodes = listOf(
+                        TestCordapp.findCordapp("com.github.opticyclic.corda.demo.classic.contracts"),
+                        TestCordapp.findCordapp("com.github.opticyclic.corda.demo.flows.classic")
+                )))
         megaCorp = network.createPartyNode()
         miniCorp = network.createPartyNode()
         // For real nodes this happens automatically, but we have to manually register the flow for tests.

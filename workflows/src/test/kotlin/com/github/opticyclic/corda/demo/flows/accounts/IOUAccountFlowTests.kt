@@ -1,6 +1,10 @@
 package com.github.opticyclic.corda.demo.flows.accounts
 
 import com.github.opticyclic.corda.demo.accounts.states.IOUAccountState
+import com.github.opticyclic.corda.demo.flows.classic.IOUResponder
+import com.r3.corda.lib.accounts.contracts.states.AccountInfo
+import com.r3.corda.lib.accounts.workflows.services.KeyManagementBackedAccountService
+import net.corda.core.contracts.StateAndRef
 import net.corda.core.node.services.queryBy
 import net.corda.core.node.services.vault.QueryCriteria
 import net.corda.core.utilities.getOrThrow
@@ -19,6 +23,9 @@ class IOUAccountFlowTests {
     private lateinit var network: MockNetwork
     private lateinit var banks: StartedMockNode
     private lateinit var agents: StartedMockNode
+    private lateinit var bank1: StateAndRef<AccountInfo>
+    private lateinit var bank2: StateAndRef<AccountInfo>
+    private lateinit var agent1: StateAndRef<AccountInfo>
 
     @BeforeClass
     fun setup() {
@@ -26,12 +33,19 @@ class IOUAccountFlowTests {
                 networkParameters = testNetworkParameters(minimumPlatformVersion = 4),
                 cordappsForAllNodes = listOf(
                         TestCordapp.findCordapp("com.github.opticyclic.corda.demo.accounts.contracts"),
-                        TestCordapp.findCordapp("com.github.opticyclic.corda.demo.flows.accounts")
+                        TestCordapp.findCordapp("com.github.opticyclic.corda.demo.flows.accounts"),
+                        TestCordapp.findCordapp("com.r3.corda.lib.accounts.contracts"),
+                        TestCordapp.findCordapp("com.r3.corda.lib.accounts.workflows")
                 )))
         banks = network.createPartyNode()
         agents = network.createPartyNode()
         // For real nodes this happens automatically, but we have to manually register the flow for tests.
-        listOf(banks, agents).forEach { it.registerInitiatedFlow(IOUAccountResponder::class.java) }
+        listOf(banks, agents).forEach { it.registerInitiatedFlow(IOUResponder::class.java) }
+
+        bank1 = banks.services.cordaService(KeyManagementBackedAccountService::class.java).createAccount("Bank1").getOrThrow()
+        bank2 = banks.services.cordaService(KeyManagementBackedAccountService::class.java).createAccount("Bank2").getOrThrow()
+        agent1 = agents.services.cordaService(KeyManagementBackedAccountService::class.java).createAccount("Agent1").getOrThrow()
+
         network.runNetwork()
     }
 

@@ -1,7 +1,6 @@
 package com.github.opticyclic.corda.demo.flows.accounts
 
 import com.github.opticyclic.corda.demo.accounts.states.IOUAccountState
-import net.corda.core.contracts.TransactionVerificationException
 import net.corda.core.node.services.queryBy
 import net.corda.core.node.services.vault.QueryCriteria
 import net.corda.core.utilities.getOrThrow
@@ -15,7 +14,6 @@ import org.testng.annotations.AfterClass
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 
 class IOUAccountFlowTests {
     private lateinit var network: MockNetwork
@@ -40,49 +38,6 @@ class IOUAccountFlowTests {
     @AfterClass
     fun tearDown() {
         network.stopNodes()
-    }
-
-    @Test
-    fun `flow rejects invalid IOUs`() {
-        val flow = IOUAccountFlow(-1, miniCorp.info.singleIdentity())
-        val future = megaCorp.startFlow(flow)
-        network.runNetwork()
-
-        // The IOUContract specifies that IOUs cannot have negative values.
-        assertFailsWith<TransactionVerificationException> { future.getOrThrow() }
-    }
-
-    @Test
-    fun `SignedTransaction returned by the flow is signed by the initiator`() {
-        val flow = IOUAccountFlow(1, miniCorp.info.singleIdentity())
-        val future = megaCorp.startFlow(flow)
-        network.runNetwork()
-
-        val signedTx = future.getOrThrow()
-        signedTx.verifySignaturesExcept(miniCorp.info.singleIdentity().owningKey)
-    }
-
-    @Test
-    fun `SignedTransaction returned by the flow is signed by the acceptor`() {
-        val flow = IOUAccountFlow(1, miniCorp.info.singleIdentity())
-        val future = megaCorp.startFlow(flow)
-        network.runNetwork()
-
-        val signedTx = future.getOrThrow()
-        signedTx.verifySignaturesExcept(megaCorp.info.singleIdentity().owningKey)
-    }
-
-    @Test
-    fun `flow records a transaction in both parties' transaction vaults`() {
-        val flow = IOUAccountFlow(1, miniCorp.info.singleIdentity())
-        val future = megaCorp.startFlow(flow)
-        network.runNetwork()
-        val signedTx = future.getOrThrow()
-
-        // We check the recorded transaction in both transaction storages.
-        for (node in listOf(megaCorp, miniCorp)) {
-            assertEquals(signedTx, node.services.validatedTransactions.getTransaction(signedTx.id))
-        }
     }
 
     @Test

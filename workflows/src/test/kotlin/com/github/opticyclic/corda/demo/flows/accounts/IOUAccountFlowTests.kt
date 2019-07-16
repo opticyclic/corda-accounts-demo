@@ -102,7 +102,8 @@ class IOUAccountFlowTests {
 
         val output = signedTx.tx.outputs.single().data as IOUAccountState
 
-        //Share the state and the account with the Bank node
+        //Share the state and the account with the Bank node so that we can look up by keys
+        //TODO: The test will fail if we don't do this. Ideally the framework should do this for us
         banksAccountService.shareStateAndSyncAccounts(signedTx.tx.outRefsOfType<IOUAccountState>().single(), agents.identity()).runAndGet(network)
 
         //Look up the IOU via the transaction and check both accounts are visible to the bank

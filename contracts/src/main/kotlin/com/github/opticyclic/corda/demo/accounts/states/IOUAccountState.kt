@@ -5,7 +5,8 @@ import net.corda.core.contracts.BelongsToContract
 import net.corda.core.contracts.LinearState
 import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.identity.AbstractParty
-import net.corda.core.identity.Party
+import net.corda.core.identity.AnonymousParty
+import java.security.PublicKey
 
 /**
  * The state object recording an IOU agreement between two parties.
@@ -16,11 +17,10 @@ import net.corda.core.identity.Party
  */
 @BelongsToContract(IOUAccountContract::class)
 data class IOUAccountState(val value: Int,
-                           val lender: Party,
-                           val borrower: Party,
+                    val lender: PublicKey,
+                    val borrower: PublicKey,
                            override val linearId: UniqueIdentifier = UniqueIdentifier())
     :LinearState {
     //The public keys of the involved parties.
-    override val participants: List<AbstractParty> get() = listOf(lender, borrower)
-
+    override val participants: List<AbstractParty> get() = listOf(lender, borrower).map { AnonymousParty(it) }
 }

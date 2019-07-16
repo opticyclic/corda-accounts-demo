@@ -1,6 +1,7 @@
 package com.github.opticyclic.corda.demo.flows.accounts
 
 import com.github.opticyclic.corda.demo.accounts.states.IOUAccountState
+import com.github.opticyclic.corda.demo.flows.AgentListener
 import com.github.opticyclic.corda.demo.flows.accountService
 import com.github.opticyclic.corda.demo.flows.classic.IOUResponder
 import com.github.opticyclic.corda.demo.flows.identity
@@ -21,10 +22,12 @@ import net.corda.testing.node.StartedMockNode
 import net.corda.testing.node.TestCordapp
 import org.testng.annotations.AfterClass
 import org.testng.annotations.BeforeClass
+import org.testng.annotations.Listeners
 import org.testng.annotations.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
+@Listeners(AgentListener::class)
 class IOUAccountFlowTests {
     private lateinit var network: MockNetwork
     private lateinit var banks: StartedMockNode

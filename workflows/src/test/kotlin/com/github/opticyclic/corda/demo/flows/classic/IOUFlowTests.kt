@@ -1,6 +1,7 @@
 package com.github.opticyclic.corda.demo.flows.classic
 
 import com.github.opticyclic.corda.demo.classic.states.IOUState
+import com.github.opticyclic.corda.demo.flows.AgentListener
 import net.corda.core.contracts.TransactionVerificationException
 import net.corda.core.node.services.queryBy
 import net.corda.core.node.services.vault.QueryCriteria
@@ -13,10 +14,12 @@ import net.corda.testing.node.StartedMockNode
 import net.corda.testing.node.TestCordapp
 import org.testng.annotations.AfterClass
 import org.testng.annotations.BeforeClass
+import org.testng.annotations.Listeners
 import org.testng.annotations.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
+@Listeners(AgentListener::class)
 class IOUFlowTests {
     private lateinit var network: MockNetwork
     private lateinit var megaCorp: StartedMockNode

@@ -59,7 +59,7 @@ class IOUAccountFlowTests {
     }
 
     @Test
-    fun `recorded transaction has no inputs and a single output, the input IOU`() {
+    fun `Save an IOU using accounts on a single node`() {
         val iouValue = 1
         val flow = IOUAccountFlow(iouValue, agents.info.singleIdentity())
         val future = banks.startFlow(flow)
@@ -80,7 +80,7 @@ class IOUAccountFlowTests {
     }
 
     @Test
-    fun `flow records the correct IOU in both parties' vaults`() {
+    fun `Save an IOU in accounts across nodes`() {
         val iouValue = 5
         val flow = IOUAccountFlow(iouValue, agents.info.singleIdentity())
         val future = banks.startFlow(flow)

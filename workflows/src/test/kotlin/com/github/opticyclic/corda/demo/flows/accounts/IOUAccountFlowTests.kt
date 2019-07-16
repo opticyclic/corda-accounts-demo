@@ -5,6 +5,7 @@ import com.github.opticyclic.corda.demo.flows.classic.IOUResponder
 import com.r3.corda.lib.accounts.contracts.states.AccountInfo
 import com.r3.corda.lib.accounts.workflows.services.KeyManagementBackedAccountService
 import net.corda.core.contracts.StateAndRef
+import net.corda.core.identity.CordaX500Name
 import net.corda.core.node.services.queryBy
 import net.corda.core.node.services.vault.QueryCriteria
 import net.corda.core.utilities.getOrThrow
@@ -37,11 +38,14 @@ class IOUAccountFlowTests {
                         TestCordapp.findCordapp("com.r3.corda.lib.accounts.contracts"),
                         TestCordapp.findCordapp("com.r3.corda.lib.accounts.workflows")
                 )))
-        banks = network.createPartyNode()
-        agents = network.createPartyNode()
+        //Name our test nodes for clarity when debugging
+        banks = network.createPartyNode(legalName = CordaX500Name("Banks Node", "London", "GB"))
+        agents = network.createPartyNode(legalName = CordaX500Name("Agents Node", "London", "GB"))
+
         // For real nodes this happens automatically, but we have to manually register the flow for tests.
         listOf(banks, agents).forEach { it.registerInitiatedFlow(IOUResponder::class.java) }
 
+        //Create accounts on the nodes for testing
         bank1 = banks.services.cordaService(KeyManagementBackedAccountService::class.java).createAccount("Bank1").getOrThrow()
         bank2 = banks.services.cordaService(KeyManagementBackedAccountService::class.java).createAccount("Bank2").getOrThrow()
         agent1 = agents.services.cordaService(KeyManagementBackedAccountService::class.java).createAccount("Agent1").getOrThrow()

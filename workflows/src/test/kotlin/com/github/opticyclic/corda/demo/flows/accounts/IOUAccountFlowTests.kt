@@ -2,6 +2,7 @@ package com.github.opticyclic.corda.demo.flows.accounts
 
 import com.github.opticyclic.corda.demo.accounts.states.IOUAccountState
 import com.github.opticyclic.corda.demo.flows.classic.IOUResponder
+import com.github.opticyclic.corda.demo.flows.runAndGet
 import com.r3.corda.lib.accounts.contracts.states.AccountInfo
 import com.r3.corda.lib.accounts.workflows.services.KeyManagementBackedAccountService
 import net.corda.core.contracts.StateAndRef
@@ -62,9 +63,7 @@ class IOUAccountFlowTests {
     fun `Save an IOU using accounts on a single node`() {
         val iouValue = 1
         val flow = IOUAccountFlow(iouValue, agents.info.singleIdentity())
-        val future = banks.startFlow(flow)
-        network.runNetwork()
-        val signedTx = future.getOrThrow()
+        val signedTx = banks.startFlow(flow).runAndGet(network)
 
         // We check the recorded transaction in both vaults.
         for (node in listOf(banks, agents)) {
@@ -83,9 +82,7 @@ class IOUAccountFlowTests {
     fun `Save an IOU in accounts across nodes`() {
         val iouValue = 5
         val flow = IOUAccountFlow(iouValue, agents.info.singleIdentity())
-        val future = banks.startFlow(flow)
-        network.runNetwork()
-        val signedTx = future.getOrThrow()
+        val signedTx = banks.startFlow(flow).runAndGet(network)
 
         val output = signedTx.tx.outputs.single().data as IOUAccountState
         // We check the recorded IOU in both vaults.

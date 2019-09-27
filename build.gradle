@@ -1,8 +1,8 @@
 buildscript {
   ext {
-    corda_release_version = '4.1'
+    corda_release_version = '4.3-RC01'
     corda_gradle_plugins_version = '4.0.42'
-    accounts_release_version = '1.0-RC01'
+    accounts_release_version = '1.0-RC03'
     quasar_version = '0.7.10'
     kotlin_version = '1.2.71'
     testng_version = '6.14.3'
@@ -58,7 +58,7 @@ dependencies {
   cordapp project(":contracts")
   cordapp project(":workflows")
   cordapp "com.r3.corda.lib.accounts:accounts-contracts:$accounts_release_version"
-  cordapp "com.r3.corda.lib.accounts:accounts-flows:$accounts_release_version"
+  cordapp "com.r3.corda.lib.accounts:accounts-workflows:$accounts_release_version"
 }
 
 task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
@@ -69,7 +69,7 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
     cordapp project(':contracts')
     cordapp project(':workflows')
     cordapp("com.r3.corda.lib.accounts:accounts-contracts:$accounts_release_version")
-    cordapp("com.r3.corda.lib.accounts:accounts-flows:$accounts_release_version")
+    cordapp("com.r3.corda.lib.accounts:accounts-workflows:$accounts_release_version")
     rpcUsers = [[user: "user1", "password": "test", "permissions": ["ALL"]]]
   }
   node {

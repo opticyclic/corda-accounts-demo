@@ -23,7 +23,7 @@ dependencies {
 
   // Corda dependencies.
   cordaCompile "net.corda:corda-core:$corda_release_version"
-  cordaCompile "com.r3.corda.lib.accounts:accounts-flows:$accounts_release_version"
+  cordaCompile "com.r3.corda.lib.accounts:accounts-workflows:$accounts_release_version"
   
   cordaRuntime "net.corda:corda:$corda_release_version"
 

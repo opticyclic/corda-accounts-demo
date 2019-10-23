@@ -26,7 +26,7 @@ Add a variable for the accounts version:
 
     buildscript {
         ext {
-            accounts_release_version = '1.0-RC03'
+            accounts_release_version = '1.0-RC04'
         }
     }
 

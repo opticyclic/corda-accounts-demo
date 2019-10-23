@@ -35,4 +35,6 @@ dependencies {
   testCompile "net.corda:corda-node-driver:$corda_release_version"
   //Load the quasar JVM agent dynamically
   testCompile "com.ea.agentloader:ea-agent-loader:${eaagentloader_version}"
+  //Gradle doesn't include the tools.jar by default and it is required for Mockito/ByteBuddy to attach
+  testCompile files(org.gradle.internal.jvm.Jvm.current().toolsJar)
 }

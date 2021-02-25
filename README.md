@@ -26,14 +26,13 @@ Add a variable for the accounts version:
 
     buildscript {
         ext {
-            accounts_release_version = '1.0-RC04'
+            accounts_release_version = '1.0'
         }
     }
 
 Add the accounts artifactory repository to the list of repositories for your project:
 
     repositories {
-        maven { url 'http://ci-artifactory.corda.r3cev.com/artifactory/corda-lib-dev' }
         maven { url 'http://ci-artifactory.corda.r3cev.com/artifactory/corda-lib' }
     }
 
